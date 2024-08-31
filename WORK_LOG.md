@@ -1,9 +1,9 @@
-Name: YOUR NAME HERE
+Name: Stevie
 
-| Date    |  Time  |                                     Update |
-|:--------|:------:|-------------------------------------------:|
-| April 5 | 9-10pm | I tried to write abstract, efficient code. |
-|         |        |                                            |
+| Date   |     Time      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Update |
+|:-------|:-------------:|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Aug 30 | 6:05pm-6:40pm | I decided that I want to use recursion for my initial attempt to solve this problem. I will come at it in a similar way to how I solved the maze solver problem, where I used recursion to figure out how to solve the maze by keeping an array showing the squares where I've already gone. If I return to an old square, the recursion will end. Instead of returning a boolean with my recursive loop, I will be returning the array that I use to keep track of the visited squares. I will also use this array to see how many turns each path took. |
+|        |               |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 
-To add a new row to the table, click into a cell and then hit shift-enter.
+To add a new row to the table, click into a cell and then hit shift-enter
