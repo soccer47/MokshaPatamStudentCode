@@ -25,52 +25,52 @@ public class MokshaPatam {
         int current = 1;
         // Creates new Queue to which the cells to be explored are added
         Queue<Integer> toVisit = new LinkedList<>();
-        ArrayList<Integer> visited = new ArrayList<>();
-        int[] prevSq = new int[boardsize];
+        int[] prevSq = new int[boardsize + 1];
         // Adds the start cell to the solution
         toVisit.add(current);
 
-        while (!visited.contains(boardsize)) {
+        while (prevSq[boardsize] == 0) {
             if (toVisit.peek() == null) {
                 return -1;
             }
             current = toVisit.remove();
 
-            // If the result roll lands on a ladder, go to the corresponding square on the board
-            for (int i = 0; i < ladders.length; i++) {
-                if (current == ladders[i][0]) {
-                    current = ladders[i][1];
-                    break;
-                }
-            }
-            // If the result roll lands on a snake, go to the corresponding square on the board
-            for (int i = 0; i < snakes.length; i++) {
-                if (current == snakes[i][0]) {
-                    current = snakes[i][1];
-                    break;
-                }
-            }
-
-            // Continue if the current square has already been visited
-            if (visited.contains(current)) {
-                continue;
-            }
-
-            // Add the current square to the ArrayList of visited squares
-            visited.add(current);
-
             // Add the next possible squares to the toVisit queue (if they aren't already visited)
             for (int i = 1; i < 7; i++) {
-                if (!visited.contains(current + i)) {
-                    toVisit.add(current + i);
-                    prevSq[current + i - 1] = current;
+                int resultSq = current + i;
+                if (resultSq == boardsize) {
+                    prevSq[boardsize] = current;
+                }
+
+                // Makes sure that the result square isn't greater than the end square, and hasn't been given a parent square yet
+                if (resultSq <= boardsize && prevSq[resultSq] == 0) {
+                    // If the result roll lands on a ladder, go to the corresponding square on the board
+                    for (int j = 0; j < ladders.length; j++) {
+                        if (resultSq == ladders[j][0]) {
+                            resultSq = ladders[j][1];
+                            break;
+                        }
+                    }
+                    // If the result roll lands on a snake, go to the corresponding square on the board
+                    for (int j = 0; j < snakes.length; j++) {
+                        if (resultSq == snakes[j][0]) {
+                            resultSq = snakes[j][1];
+                            break;
+                        }
+                    }
+
+                    // Makes sure the parent of the result square hasn't yet been determined
+                    if (prevSq[resultSq] == 0) {
+                        toVisit.add(resultSq);
+                        prevSq[resultSq] = current;
+                    }
                 }
             }
 
         }
 
         // Return the lowest number of possible turns
-        return visited.size();
+        return getSolution(prevSq);
     }
 
 
@@ -78,13 +78,13 @@ public class MokshaPatam {
     public static int getSolution(int[] prevSq) {
         // Set the current square equal to the end square to start
         int current = prevSq[prevSq.length - 1];
-        // Set turns equal to 0 to start
-        int turns = 0;
+        // Set turns equal to 1 to start
+        int turns = 1;
 
         // While current square isn't the first square, continue looping
         while (current != 1) {
             // Set current to the previous square of the current square
-            current = prevSq[current - 1];
+            current = prevSq[current];
             // Add ones to turns
             turns++;
         }
