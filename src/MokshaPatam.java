@@ -1,10 +1,12 @@
+import java.util.Arrays;
+
 /**
  * Moksha Patam
  * A puzzle created by Zach Blick
  * for Adventures in Algorithms
  * at Menlo School in Atherton, CA
  *
- * Completed by: [YOUR NAME HERE]
+ * Completed by: Stevie Halprin
  *
  */
 
@@ -86,11 +88,10 @@ public class MokshaPatam {
         // Iterates through the possible roles (1-6), calling rollResult recursively on each possible roll
         // Finds the roll with the lowest number of turns out of the 6
         for (int i = 1; i < 7; i++) {
-            boolean[] visitedSq2 = new boolean[boardsize];
-            for (int j = 0; j < boardsize; j++) {
-                visitedSq2[i] = visitedSq[i];
-            }
-            int turns = rollResult(resultSquare, i, ladders, snakes, visitedSq2, boardsize);
+            // Note- I got the .copyOf() fnc by looking up how to transfer the values from one array to another
+            // I thought the .copyOf fnc would be 'cleaner' than using a for loop to add the values one at a time
+            // boolean[] visitedSq2 = Arrays.copyOf(visitedSq, boardsize);
+            int turns = rollResult(resultSquare, i, ladders, snakes, visitedSq, boardsize);
             // If winning is possible with the given roll and turns is lower than the current lowest number of turns, lowestTurns equals turns
             if (turns != -1 && turns < lowestTurns) {
                 lowestTurns = turns;
