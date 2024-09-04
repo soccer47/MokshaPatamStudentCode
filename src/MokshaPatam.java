@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Moksha Patam
@@ -18,26 +21,76 @@ public class MokshaPatam {
      */
     public static int fewestMoves(int boardsize, int[][] ladders, int[][] snakes) {
 
-        // Lowest number of turns taken initialized at highest representable int
-        int lowestTurns = Integer.MAX_VALUE;
+        // Sets the current cell to the starting cell of the maze
+        int current = 1;
+        // Creates new Queue to which the cells to be explored are added
+        Queue<Integer> toVisit = new LinkedList<>();
+        ArrayList<Integer> visited = new ArrayList<>();
+        int[] prevSq = new int[boardsize];
+        // Adds the start cell to the solution
+        toVisit.add(current);
 
-        for (int i = 1; i < 7; i++) {
-            // Initialize array of booleans of same length as number of total squares representing whether squares have been visited
-            boolean[] visitedSq = new boolean[boardsize];
-            // Set turns equal to the lowest roll path from rollResult with given roll
-            int turns = rollResult(1, i, ladders, snakes, visitedSq, boardsize);
-            // If winning is possible with the given roll and turns is lower than the current lowest number of turns, lowestTurns equals turns
-            if (turns != -1 && turns < lowestTurns) {
-                lowestTurns = turns;
+        while (!visited.contains(boardsize)) {
+            if (toVisit.peek() == null) {
+                return -1;
             }
+            current = toVisit.remove();
+
+            // If the result roll lands on a ladder, go to the corresponding square on the board
+            for (int i = 0; i < ladders.length; i++) {
+                if (current == ladders[i][0]) {
+                    current = ladders[i][1];
+                    break;
+                }
+            }
+            // If the result roll lands on a snake, go to the corresponding square on the board
+            for (int i = 0; i < snakes.length; i++) {
+                if (current == snakes[i][0]) {
+                    current = snakes[i][1];
+                    break;
+                }
+            }
+
+            // Continue if the current square has already been visited
+            if (visited.contains(current)) {
+                continue;
+            }
+
+            // Add the current square to the ArrayList of visited squares
+            visited.add(current);
+
+            // Add the next possible squares to the toVisit queue (if they aren't already visited)
+            for (int i = 1; i < 7; i++) {
+                if (!visited.contains(current + i)) {
+                    toVisit.add(current + i);
+                    prevSq[current + i - 1] = current;
+                }
+            }
+
         }
 
-        // If lowestTurns hasn't been changed (if end can't be reached) return -1
-        if (lowestTurns == Integer.MAX_VALUE) {
-            return -1;
-        }
         // Return the lowest number of possible turns
-        return lowestTurns;
+        return visited.size();
+    }
+
+
+    // Return the number of turns taken
+    public static int getSolution(int[] prevSq) {
+        // Set the current square equal to the end square to start
+        int current = prevSq[prevSq.length - 1];
+        // Set turns equal to 0 to start
+        int turns = 0;
+
+        // While current square isn't the first square, continue looping
+        while (current != 1) {
+            // Set current to the previous square of the current square
+            current = prevSq[current - 1];
+            // Add ones to turns
+            turns++;
+        }
+
+        // Return the number of turns taken
+        return turns;
     }
 
     public static int rollResult(int oldSquare, int roll, int[][] ladders, int[][] snakes, boolean[] visitedSq, int boardsize) {
