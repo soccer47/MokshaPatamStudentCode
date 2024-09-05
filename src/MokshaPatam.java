@@ -27,6 +27,18 @@ public class MokshaPatam {
         Queue<Integer> toVisit = new LinkedList<>();
         // Array of integers that holds the parent square of each square at prevSq[square #]
         int[] prevSq = new int[boardsize + 1];
+
+        // Array of integers that holds the result square of each snake and ladder, with square number as index in array
+        int[] snakesLadders = new int[boardsize + 1];
+        // Add the values of each ladder to the corresponding index in the snakesLadders array
+        for (int j = 0; j < ladders.length; j++) {
+            snakesLadders[ladders[j][0]] = ladders[j][1];
+        }
+        // Add the values of each snake to the corresponding index in the snakesLadders array
+        for (int j = 0; j < snakes.length; j++) {
+            snakesLadders[snakes[j][0]] = snakes[j][1];
+        }
+
         // Adds the start cell to the solution
         toVisit.add(current);
 
@@ -52,18 +64,8 @@ public class MokshaPatam {
                 // Makes sure that the result square isn't greater than the end square, and hasn't been given a parent square yet
                 if (resultSq <= boardsize && prevSq[resultSq] == 0) {
                     // If the result roll lands on a ladder, go to the corresponding square on the board
-                    for (int j = 0; j < ladders.length; j++) {
-                        if (resultSq == ladders[j][0]) {
-                            resultSq = ladders[j][1];
-                            break;
-                        }
-                    }
-                    // If the result roll lands on a snake, go to the corresponding square on the board
-                    for (int j = 0; j < snakes.length; j++) {
-                        if (resultSq == snakes[j][0]) {
-                            resultSq = snakes[j][1];
-                            break;
-                        }
+                    if (snakesLadders[resultSq] != 0) {
+                        resultSq = snakesLadders[resultSq];
                     }
 
                     // Makes sure the parent of the result square hasn't yet been determined
